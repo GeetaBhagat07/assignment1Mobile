@@ -25,7 +25,11 @@
   },
   "homepage": "https://github.com/GeetaBhagat07/assignment1Mobile/blob/master/README.md",
   "dependencies": {
-    "express": "^4.17.1"
+    "engine.io": "*",
+    "express": "*",
+    "socket.io": "*",
+    "twilio": "*",
+    "underscore": "*"
   },
   "babel": {
     "presets": [

@@ -6,14 +6,16 @@ const OrderState = Object.freeze({
     CHOOSE: Symbol("choose"),
     SIZE: Symbol("size"),
     TOPPINGS: Symbol("toppings"),
-    DRINKS: Symbol("drinks")
+    DRINKS: Symbol("drinks"),
+    PAYMENT: Symbol("payment")
+
 });
 
 let itemName = [] , itemSize = [] ,itemTopping =[];
 
 module.exports = class GeetaOrder extends Order {
-    constructor() {
-        super();
+    constructor(sNumber, sUrl) {
+        super(sNumber, sUrl);
         this.stateCur = OrderState.WELCOMING;
         this.sSize = "";
         this.sToppings = "";
@@ -67,7 +69,9 @@ module.exports = class GeetaOrder extends Order {
 
         
             case OrderState.DRINKS:
-                this.isDone(true);
+                this.stateCur = OrderState.PAYMENT;
+                this.nOrder = 15;
+                
                 let temp="";
                 aReturn.push("Thank-you for your order of");
                 for(let i=0 ;i < itemTopping.length; i++){
@@ -76,17 +80,27 @@ module.exports = class GeetaOrder extends Order {
                 } 
               
                 if (sInput.toLowerCase() != "no") {
-                    this.sDrinks = sInput;  1234
+                    this.sDrinks = sInput; 
                 }
                 if (this.sDrinks) {
                     aReturn.push(this.sDrinks);
                 }
-                aReturn.push("Your total amount is $58.0")
+           
                 aReturn.push("Your Contact info is : " + this.sphoneNumber);
-                let d = new Date();
-                d.setMinutes(d.getMinutes() + 20);
-                aReturn.push(`Please pick it up at ${d.toTimeString()}`);
+                    aReturn.push(`Please pay for your order here`);
+                aReturn.push(`${this.sUrl}/payment/${this.sNumber}/`);
+
                 break;
+
+                case OrderState.PAYMENT:
+                    console.log(sInput);
+                    this.isDone(true);
+                    aReturn.push("Your total amount is $58.0")
+                    let d = new Date();
+                    d.setMinutes(d.getMinutes() + 20);
+                    aReturn.push(`Your order will be delivered at ${d.toTimeString()}`);
+                    break;
+
         }
         return aReturn;
     }
