@@ -1,15 +1,34 @@
+/*<-Name : Geeta, 
+Assignment 2 Chatbot
+->*/
+
 const express = require('express');
 const bodyParser = require("body-parser");
-const GeetaOrder = require("./assignment1Geeta");
-
-// Create a new express application instance
 const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const _ = require('underscore');
 
-app.use(bodyParser.urlencoded({extended:true}));
+const port = process.env.PORT || parseInt(process.argv.pop()) || 3002;
+
+server.listen(port, function () {
+  console.log("Server listening at port %d", port);
+});
+
+const GeetaOrder = require("./assignment1Geeta");
+const e = require('express');
+const { exception } = require('console');
+
+// Create a new express application instance
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("www"));
+
+const port = process.env.PORT || parseInt(process.argv.pop()) || 3002;
+server.listen(port, function () {
+    console.log("Server listening at port %d", port);
+  });
+
 const { exception } = require('console');
 app.get("/users/:uname", (req, res) => {
     res.end("Hello " + req.params.uname);
@@ -71,14 +90,16 @@ app.post("/payment/:phone", (req, res) => {
     } else {
       res.end(oOrders[sFrom].renderForm());
     }
+   
   });
   
   app.post("/payment", (req, res) => {
     // this happens when the user clicks on the link in SMS
     //const sFrom = req.params.phone;
     const sFrom = req.body.telephone;
-    oOrders[sFrom] = new ShwarmaOrder(sFrom);
+    oOrders[sFrom] = new GeetaOrder(sFrom);
     res.end(oOrders[sFrom].renderForm(req.body.title, req.body.price));
+    console.log(res);
   });
 
 io.on('connection', function (socket) {
@@ -90,6 +111,5 @@ io.on('connection', function (socket) {
   });
 });
 
-var port = process.env.PORT || parseInt(process.argv.pop()) || 3002;
 
-app.listen(port, () => console.log('Example app listening on port ' + port + '!'));
+  
